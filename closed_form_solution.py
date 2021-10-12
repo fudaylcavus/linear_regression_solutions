@@ -1,5 +1,5 @@
 import numpy as np
-from utils import x_values, y_values, plot_line_and_points, run_func_with_runtime
+from utils import x_values, y_values, plot_line_and_points, get_execution_time_by_running
 
 
 def find_b_with_closed_form(x_values, y_values, w):
@@ -35,4 +35,4 @@ def main():
 
 
 if __name__ == '__main__':
-    run_func_with_runtime(main)
+    get_execution_time_by_running(main)

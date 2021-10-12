@@ -1,4 +1,4 @@
-from utils import plot_line_and_points, find_rss, plot_3d_points, x_values, y_values, run_func_with_runtime
+from utils import plot_line_and_points, find_rss, plot_3d_points, x_values, y_values, get_execution_time_by_running
 import numpy as np
 
 
@@ -32,4 +32,4 @@ def main(print_rss=True, plot_changes=False):
 
 
 if __name__ == '__main__':
-    run_func_with_runtime(main, print_rss=False, plot_changes=False)
+    get_execution_time_by_running(main, print_rss=False, plot_changes=False)

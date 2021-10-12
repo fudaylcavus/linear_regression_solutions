@@ -36,7 +36,7 @@ def find_rss(w, b, x_real, y_real):
     return rss
 
 
-def run_func_with_runtime(func, **kwargs):
+def get_execution_time_by_running(func, **kwargs):
     start = time.time()
     func(**kwargs)
     end = time.time()
