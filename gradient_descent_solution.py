@@ -1,43 +1,41 @@
-from utils import x_values, y_values, plot_line_and_points, get_execution_time_by_running
+from utils import xs, ys, get_execution_time_by_running, plot_polynom_and_points
+import numpy as np
 
 
-# For simplicity, script only have partial derivative of RSS wrt b and w
-def get_gradient_at_b(x_values, y_values, w, b):
-    diff = 0
-    N = len(x_values)
+def get_diff_for_single_x(x, ws, w_index, x_index):
+    # w0 * zeroth power of x , w1 * first power of x + w2 * second power of x ...
+    x_s = [pow(x, i) for i in range(len(ws))]  # [0, x1, x1**2, ...]
+    x_s = np.array(x_s)
+    ws = np.array(ws)
+    diff = ys[x_index] - np.sum(x_s * ws)  # matrix multiplication and sum of the result
+    return diff * x_s[w_index]
+
+
+def get_total_diff(ws, w_index):
+    total_diff = 0
+    N = len(xs)
     for i in range(N):
-        y = y_values[i]
-        x = x_values[i]
-        diff += (y - ((w * x) + b))
-    b_gradient = -2 / N * diff
-    return b_gradient
+        total_diff += get_diff_for_single_x(xs[i], ws, w_index, i)
+    return total_diff
 
 
-def get_gradient_at_w(x_values, y_values, w, b):
-    diff = 0
-    N = len(x_values)
-    for i in range(N):
-        y = y_values[i]
-        x = x_values[i]
-        diff += x * (y - ((w * x) + b))
-    w_gradient = -2 / N * diff
-    return w_gradient
+def get_gradient_at_w(ws, w_index):
+    N = len(xs)
+    gradient_w = (-2 / N) * get_total_diff(ws, w_index)
+    return gradient_w
 
 
-def gradient_step(x_values, y_values, w_current, b_current, learning_rate):
-    w = w_current - (get_gradient_at_w(x_values, y_values, w_current, b_current) * learning_rate)
-    b = b_current - (get_gradient_at_b(x_values, y_values, w_current, b_current) * learning_rate)
-    return b, w
+def gradient_step_for_w(ws, w_index, w_current, learning_rate):
+    ws[w_index] = w_current - (get_gradient_at_w(ws, w_index) * learning_rate)
 
 
-def main(iter_count=1000, learning_rate=0.02):
-    # Gradient solution needs any point to start both for w and b,
-    # they're assumed 5 here, because normal solution is close to 0
-    b = 5
-    w = 5
-    for i in range(iter_count):
-        b, w = gradient_step(x_values, y_values, w, b, learning_rate)
-    plot_line_and_points(b, w, x_values, y_values)
+def main(iter_count=1000, learning_rate=0.03, degree=1):
+    # degree + 1 cause of intercept (w0 or bias)
+    ws = np.zeros(degree + 1, dtype=np.float64)
+    for _ in range(iter_count):
+        for i in range(len(ws)):
+            gradient_step_for_w(ws, i, ws[i], learning_rate)
+    plot_polynom_and_points(ws)
 
 
 if __name__ == '__main__':

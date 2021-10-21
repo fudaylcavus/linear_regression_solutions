@@ -1,4 +1,11 @@
-from utils import plot_line_and_points, find_rss, plot_3d_points, x_values, y_values, get_execution_time_by_running
+from utils import (
+    plot_line_and_points,
+    find_rss,
+    plot_3d_points,
+    xs as x_values,
+    ys as y_values,
+    get_execution_time_by_running)
+
 import numpy as np
 
 
@@ -29,7 +36,7 @@ def main(print_rss=True, plot_changes=False):
         RSS_values.append(rss_for_b)
     plot_line_and_points(min_b, min_w, x_values, y_values)
     plot_3d_points(np.arange(-100, 100), np.arange(-100, 100), RSS_values)
-
+    print(min_b, min_w)
 
 if __name__ == '__main__':
     get_execution_time_by_running(main, print_rss=False, plot_changes=False)

@@ -3,8 +3,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Predefined linearish points for tests
-y_values = [1.3, 2.1, 3.6, 4, 5.9, 5.6, 7, 9, 8.4]
-x_values = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ys = np.array([1.3, 2.1, 3.6, 4, 5.9, 5.6, 7, 9, 8.4])
+xs = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+
+def find_y_for_x(x_index, coeffs):
+    x_powed = [pow(xs[x_index], i) for i in range(len(coeffs))]
+    coeffs = np.array(coeffs)
+    return np.sum(x_powed * coeffs)
+
+
+def plot_polynom_and_points(coeffs):
+    fx = []
+    for i in range(len(xs)):
+        fx.append(find_y_for_x(i, coeffs))
+    plt.plot(xs, fx)
+    plt.plot(xs, ys, "o")
+    plt.show()
 
 
 def plot_line_and_points(b, w, x_values, y_values):

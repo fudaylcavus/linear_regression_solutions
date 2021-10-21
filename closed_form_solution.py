@@ -1,5 +1,5 @@
 import numpy as np
-from utils import x_values, y_values, plot_line_and_points, get_execution_time_by_running
+from utils import xs, ys, plot_line_and_points, get_execution_time_by_running
 
 
 def find_b_with_closed_form(x_values, y_values, w):
@@ -29,9 +29,10 @@ def find_w_with_closed_form(x_values, y_values):
 
 
 def main():
-    w = find_w_with_closed_form(x_values, y_values)
-    b = find_b_with_closed_form(x_values, y_values, w)
-    plot_line_and_points(b, w, x_values, y_values)
+    w = find_w_with_closed_form(xs, ys)
+    b = find_b_with_closed_form(xs, ys, w)
+    plot_line_and_points(b, w, xs, ys)
+    print(b, w)
 
 
 if __name__ == '__main__':
