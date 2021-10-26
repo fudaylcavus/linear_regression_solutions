@@ -1,10 +1,23 @@
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.model_selection import train_test_split
 
-# Predefined linearish points for tests
-ys = np.array([1.3, 2.1, 3.6, 4, 5.9, 5.6, 7, 9, 8.4])
-xs = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+# Polynomial dots generation
+trX = np.linspace(-1, 1, 101)
+num_coeffs = 6
+trY_coeffs = [1, 2, 3, 4, 5, 6]
+trY = 0
+for i in range(num_coeffs):
+    trY += trY_coeffs[i] * np.power(trX, i)
+    trY += np.random.randn(*trX.shape) * .5
+
+plt.scatter(trX, trY)
+plt.show()
+xs = trX
+ys = trY
+
+# # xs, x_test, ys, y_test = train_test_split(trX, trY)
 
 
 def find_y_for_x(x_index, coeffs):
