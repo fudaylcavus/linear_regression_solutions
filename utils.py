@@ -1,12 +1,13 @@
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # Polynomial dots generation
 trX = np.linspace(-1, 1, 101)
-num_coeffs = 6
-trY_coeffs = [1, 2, 3, 4, 5, 6]
+num_coeffs = 1
+trY_coeffs = [ 2]
 trY = 0
 for i in range(num_coeffs):
     trY += trY_coeffs[i] * np.power(trX, i)
@@ -17,21 +18,25 @@ plt.show()
 xs = trX
 ys = trY
 
-# # xs, x_test, ys, y_test = train_test_split(trX, trY)
+house_data = pd.read_csv('streeteasy.csv')
+# x_all = house_data[['bedrooms', 'bathrooms', 'size_sqft', 'min_to_subway']]
+x_all = house_data[['size_sqft', 'bedrooms', 'bathrooms']]
+y_all = house_data.rent  # thing we want to predict
+
+x_train, x_test, y_train, y_test = train_test_split(x_all, y_all, train_size=50, random_state=0)
+x_train, x_test, y_train, y_test = np.array(x_train), np.array(x_test), np.array(y_train), np.array(y_test)
+# x_train = xs.reshape(-1, 1)
+# y_train = ys.reshape(-1, 1)
+# x_train = x_train[:5]
+# y_train = y_train[:5]
 
 
-def find_y_for_x(x_index, coeffs):
-    x_powed = [pow(xs[x_index], i) for i in range(len(coeffs))]
-    coeffs = np.array(coeffs)
-    return np.sum(x_powed * coeffs)
+def plot_polynom_and_points(coeffs, xs, ys):
+    plt.plot(xs, xs.dot(coeffs), c='black')
+    print(xs[:, 1])
+    print(ys)
+    plt.scatter(xs[:, 1], ys)
 
-
-def plot_polynom_and_points(coeffs):
-    fx = []
-    for i in range(len(xs)):
-        fx.append(find_y_for_x(i, coeffs))
-    plt.plot(xs, fx)
-    plt.plot(xs, ys, "o")
     plt.show()
 
 
@@ -48,24 +53,26 @@ def plot_line_and_points(b, w, x_values, y_values):
     plt.show()
 
 
-def plot_3d_points(x_values, y_values, z_values):
-    Z = np.array(z_values)
-    X, Y = np.meshgrid(x_values, y_values)
-    fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
-    ax.plot_wireframe(X, Y, Z)
+def plot_3d_points(x_values, y_values, z_values, z_prediction):
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(x_values, y_values, z_values, c='red')
+
+    ax.plot_trisurf(x_values, y_values, z_prediction, antialiased=True, linewidth=0)
+    ax.view_init(10, 40)
     plt.show()
 
 
-def find_rss(w, b, x_real, y_real):
-    rss = 0
-    for x in range(len(x_real)):
-        square_of_residue = (y_real[x] - (b + w * x_real[x])) ** 2
-        rss += square_of_residue
-    return rss
+def find_rss(coeffs, x_real, y_real):
+    cost = np.sum(((x_real.dot(coeffs) - y_real) ** 2) / (2 * len(y_real)))
+    return cost
+    # rss = ((y_real - (np.dot(coeffs,  x_real.T) + intercept))**2).sum()
+    # return rss
 
 
 def get_execution_time_by_running(func, **kwargs):
     start = time.time()
-    func(**kwargs)
+    output = func(**kwargs)
     end = time.time()
     print('Runtime: ', round((end - start), 2), 's')
+    return output
